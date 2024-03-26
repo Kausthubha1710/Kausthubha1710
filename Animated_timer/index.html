@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animated Timer with Controls</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+  }
+  #timer {
+    font-size: 48px;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+<div>
+  <input type="number" id="timeInput" placeholder="Enter time in seconds">
+  <button id="setTimeButton">Set Time</button>
+</div>
+<div id="timer">00:00</div>
+<button id="startButton">Start</button>
+<button id="pauseButton">Pause</button>
+<button id="stopButton">Stop</button>
+<script>
+  let timerDisplay = document.getElementById('timer');
+  let startButton = document.getElementById('startButton');
+  let pauseButton = document.getElementById('pauseButton');
+  let stopButton = document.getElementById('stopButton');
+  let timeInput = document.getElementById('timeInput');
+  let setTimeButton = document.getElementById('setTimeButton');
+  let timerInterval;
+  let timerDuration = 0;
+  let timeRemaining = 0;
+  let isTimerRunning = false;
+
+  // Function to start the timer
+  function startTimer(duration, display) {
+    isTimerRunning = true;
+    let timer = duration, minutes, seconds;
+    timerInterval = setInterval(function () {
+      if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        display.textContent = "00:00";
+        isTimerRunning = false;
+      } else if (!isTimerRunning) {
+        clearInterval(timerInterval);
+      } else {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+        timeRemaining = timer;
+        timer--;
+
+      }
+    }, 1000);
+  }
+
+  // Event listener for start button
+  startButton.addEventListener('click', function() {
+    if (!isTimerRunning) {
+      timerDuration = parseInt(timeInput.value);
+      let minutes = parseInt(timerDuration / 60, 10);
+      let seconds = parseInt(timerDuration % 60, 10);
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      timerDisplay.textContent = minutes + ":" + seconds;
+      startTimer(timerDuration, timerDisplay);
+    }
+  });
+
+  // Event listener for pause button
+  pauseButton.addEventListener('click', function() {
+    isTimerRunning = false;
+  });
+
+  // Event listener for stop button
+  stopButton.addEventListener('click', function() {
+    clearInterval(timerInterval);
+    timerDisplay.textContent = "00:00";
+    isTimerRunning = false;
+  });
+
+  // Event listener for set time button
+  setTimeButton.addEventListener('click', function() {
+    timerDuration = parseInt(timeInput.value);
+    let minutes = parseInt(timerDuration / 60, 10);
+    let seconds = parseInt(timerDuration % 60, 10);
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    timerDisplay.textContent = minutes + ":" + seconds;
+    timeRemaining = timerDuration;
+  });
+</script>
+</body>
+</html>
